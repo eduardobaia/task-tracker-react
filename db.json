@@ -5,6 +5,12 @@
       "text": "Write a book !",
       "day": "Future",
       "reminder": true
+    },
+    {
+      "text": "Take test",
+      "day": "friday MOntag",
+      "reminder": true,
+      "id": 3
     }
   ]
 }

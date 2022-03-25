@@ -22,6 +22,16 @@ function App() {
     return data;
   };
 
+
+    //fetch dats from taskjs
+    const fetchTasksb = async (id) => {
+      const res = await fetch(`http://localhost:8080/tasks/${id}`);
+      const data = await res.json();
+  
+      return data;
+    };
+
+
   const [tasks, setTasks] = useState([]);
 
   //delete tasks
@@ -31,7 +41,22 @@ function App() {
   };
 
   //toggle reminder
-  const toggleReminder = (id) => {
+  const toggleReminder = async (id) => {
+    const taksToTofggle = await fetchTasksb(id) 
+
+    const updatedTask ={...taksToTofggle, reminder : !taksToTofggle.reminder}
+
+    const res = await fetch(`http://localhost:8080/tasks/${id}`,{
+      method:'PUT',
+      headers:{
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(updatedTask)
+    });
+
+    const datsa = await res.json();
+    
+
     setTasks(
       tasks.map((task) =>
         task.id === id ? { ...task, reminder: !task.reminder } : task
@@ -40,12 +65,27 @@ function App() {
   };
 
   //Add task
-  const addTask = (task) => {
-    console.log(task);
-    const id = Math.floor(Math.random() * 10000) + 1;
+  const addTask = async (task) => {
 
-    const newTask = { id, ...task };
-    setTasks([...tasks, newTask]);
+  
+    const res = await fetch("http://localhost:8080/tasks", {
+      method: 'POST',
+      headers:{
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(task)
+    });
+
+    const data =await  res.json()
+
+    //update tasks with the existennts plus the new 
+    setTasks([...tasks, data])
+
+    // console.log(task);
+    // const id = Math.floor(Math.random() * 10000) + 1;
+
+    // const newTask = { id, ...task };
+    // setTasks([...tasks, newTask]);
   };
 
   //delete task
