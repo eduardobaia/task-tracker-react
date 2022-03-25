@@ -1,16 +1,28 @@
 {
   "tasks": [
     {
-      "id": 2,
-      "text": "Write a book !",
-      "day": "Future",
-      "reminder": true
+      "text": "German",
+      "day": "today",
+      "reminder": true,
+      "id": 1
     },
     {
-      "text": "Take test",
-      "day": "friday MOntag",
+      "text": "Djava ? ",
+      "day": "night ",
       "reminder": true,
+      "id": 2
+    },
+    {
+      "text": "Movie ",
+      "day": "hoje",
+      "reminder": false,
       "id": 3
+    },
+    {
+      "text": "Read ",
+      "day": "today",
+      "reminder": false,
+      "id": 4
     }
   ]
 }

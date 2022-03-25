@@ -8,6 +8,10 @@ In the project directory, you can run:
 
 add
 npm install react-icons
+
+Install json serve
+
+install react-router-dom 
 ### `npm start`
 
 Runs the app in the development mode.\

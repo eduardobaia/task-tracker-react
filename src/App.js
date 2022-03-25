@@ -2,6 +2,9 @@ import Header from "./components/Header";
 import Task from "./components/Tasks";
 import { useState, useEffect } from "react";
 import AddTask from "./components/AddTask";
+import Footer from "./components/Footer";
+import About from "./components/About";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   const [showAddTask, setShowAddTask] = useState(false);
@@ -22,15 +25,13 @@ function App() {
     return data;
   };
 
+  //fetch dats from taskjs
+  const fetchTasksb = async (id) => {
+    const res = await fetch(`http://localhost:8080/tasks/${id}`);
+    const data = await res.json();
 
-    //fetch dats from taskjs
-    const fetchTasksb = async (id) => {
-      const res = await fetch(`http://localhost:8080/tasks/${id}`);
-      const data = await res.json();
-  
-      return data;
-    };
-
+    return data;
+  };
 
   const [tasks, setTasks] = useState([]);
 
@@ -42,20 +43,19 @@ function App() {
 
   //toggle reminder
   const toggleReminder = async (id) => {
-    const taksToTofggle = await fetchTasksb(id) 
+    const taksToTofggle = await fetchTasksb(id);
 
-    const updatedTask ={...taksToTofggle, reminder : !taksToTofggle.reminder}
+    const updatedTask = { ...taksToTofggle, reminder: !taksToTofggle.reminder };
 
-    const res = await fetch(`http://localhost:8080/tasks/${id}`,{
-      method:'PUT',
-      headers:{
-        'Content-type': 'application/json'
+    const res = await fetch(`http://localhost:8080/tasks/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
       },
-      body: JSON.stringify(updatedTask)
+      body: JSON.stringify(updatedTask),
     });
 
     const datsa = await res.json();
-    
 
     setTasks(
       tasks.map((task) =>
@@ -66,20 +66,18 @@ function App() {
 
   //Add task
   const addTask = async (task) => {
-
-  
     const res = await fetch("http://localhost:8080/tasks", {
-      method: 'POST',
-      headers:{
-        'Content-type': 'application/json'
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
       },
-      body: JSON.stringify(task)
+      body: JSON.stringify(task),
     });
 
-    const data =await  res.json()
+    const data = await res.json();
 
-    //update tasks with the existennts plus the new 
-    setTasks([...tasks, data])
+    //update tasks with the existennts plus the new
+    setTasks([...tasks, data]);
 
     // console.log(task);
     // const id = Math.floor(Math.random() * 10000) + 1;
@@ -97,20 +95,42 @@ function App() {
   };
 
   return (
-    <div className="container">
-      <Header
-        onAdd={() => setShowAddTask(!showAddTask)}
-        showAdd={showAddTask}
-      />
+    <Router>
+      <div className="container">
+        <Header
+          onAdd={() => setShowAddTask(!showAddTask)}
+          showAdd={showAddTask}
+        />
+        <Routes>
+          <Route
+            exact
+            path="/"
+            //render={
+            //  (props) => (
+            element={
+              <>
+                {showAddTask && <AddTask onAdd={addTask} />}
 
-      {showAddTask && <AddTask onAdd={addTask} />}
+                {tasks.length > 0 ? (
+                  <Task
+                    tasks={tasks}
+                    onDelete={deleteTask}
+                    onToggle={toggleReminder}
+                  />
+                ) : (
+                  "No tasks "
+                )}
+              </>
+            }
+            //)
+            // }
+          />
+          <Route path="/about" element={<About />} />
+        </Routes>
 
-      {tasks.length > 0 ? (
-        <Task tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder} />
-      ) : (
-        "No tasks "
-      )}
-    </div>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
